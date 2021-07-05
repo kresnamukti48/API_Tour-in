@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d8b7fdd0722862fb0e13be1e10038a0",
+    "content-hash": "d9f4c3ce47ea4c5451ef3eae3e35c515",
     "packages": [
         {
             "name": "askedio/laravel-soft-cascade",
@@ -1217,6 +1217,88 @@
                 "source": "https://github.com/laravel/tinker/tree/v2.6.1"
             },
             "time": "2021-03-02T16:53:12+00:00"
+        },
+        {
+            "name": "laravolt/indonesia",
+            "version": "v0.29",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravolt/indonesia.git",
+                "reference": "750b212ae20ab13fb192ce5b42dc1c4a421a036e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravolt/indonesia/zipball/750b212ae20ab13fb192ce5b42dc1c4a421a036e",
+                "reference": "750b212ae20ab13fb192ce5b42dc1c4a421a036e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "laravolt/suitable": "Required if you want to access editor panel",
+                "spatie/geocoder": "Synchronize latitude longitude data directly using Google's Geocoding Service"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravolt\\Indonesia\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Indonesia": "Laravolt\\Indonesia\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravolt\\Indonesia\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bayu Hendra Winata",
+                    "email": "bayu.hendra@javan.co.id"
+                },
+                {
+                    "name": "Akbar Adhatama",
+                    "email": "am.adhatama@gmail.com"
+                },
+                {
+                    "name": "Deri Ramdani",
+                    "email": "deri.ramdani1@gmail.com"
+                }
+            ],
+            "description": "Package Laravel yang berisi data Provinsi, Kabupaten/Kota, Kecamatan, dan Keluarahan/Desa di seluruh Indonesia.",
+            "keywords": [
+                "desa",
+                "indonesia",
+                "kabupaten",
+                "kecamatan",
+                "kelurahan",
+                "kota",
+                "laravel",
+                "laravolt",
+                "provinsi"
+            ],
+            "support": {
+                "issues": "https://github.com/laravolt/indonesia/issues",
+                "source": "https://github.com/laravolt/indonesia/tree/v0.29"
+            },
+            "time": "2021-01-07T04:31:45+00:00"
         },
         {
             "name": "league/commonmark",
