@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use Flugg\Responder\Exceptions\ConvertsExceptions;
+use Flugg\Responder\Exceptions\Http\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ConvertsExceptions;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -37,5 +41,19 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+
+    public function render($request, $exception)
+    {
+        if ($request->wantsJson()) {
+            $this->convertDefaultException($exception);
+
+            if ($exception instanceof HttpException) {
+                return $this->renderResponse($exception);
+            }
+        }
+
+        return parent::render($request, $exception);
     }
 }
