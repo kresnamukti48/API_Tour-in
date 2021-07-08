@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Log;
+use Str;
 
 class AuthController extends Controller
 {
@@ -14,6 +16,30 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->user = new User();
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        try {
+            $user = $this->user->where('email', $request->email)->first();
+
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                return responder()->error(null, 'The provided credentials are incorrect.');
+            }
+
+            $user['token'] = $user->createToken(Str::random(32))->plainTextToken;
+
+            return responder()->success($user);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 
     public function register(Request $request)
