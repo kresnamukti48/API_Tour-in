@@ -27,3 +27,10 @@ Route::prefix('auth')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::post('register', 'AuthController@register');
 });
+
+Route::prefix('tour')->group(function () {
+    Route::get('read', 'TourController@index');
+    Route::post('create', 'TourController@store');
+    Route::put('/update/{id}', 'TourController@update');
+    Route::delete('/delete/{id}', 'TourController@delete');
+});
