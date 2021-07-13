@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\tour;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 use Log;
 
@@ -36,13 +36,19 @@ class TourController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'tour_name' => 'required',
-                'tour_address' => 'required',
-            ]);
+        $request->validate([
+            'tour_name' => 'required',
+            'tour_address' => 'required',
+            'regency_id' => 'required|exists:master_indonesia_cities,id',
+            'province_id' => 'required|exists:master_indonesia_provinces,id',
+            'user_id' => 'required|exists:users,id',
+        ], [
+            'regency_id.exists' => 'Kota/Kabupaten tidak valid',
+            'province_id.exist' => 'Provinsi tidak valid',
+        ]);
 
-            tour::create($request->all());
+        try {
+            Tour::create($request->all());
 
             return 'Data berhasil masuk!';
         } catch (\Throwable $th) {
@@ -58,7 +64,7 @@ class TourController extends Controller
      * @param  \App\Models\tour  $tour
      * @return \Illuminate\Http\Response
      */
-    public function show(tour $tour)
+    public function show(Tour $tour)
     {
         //
     }
@@ -69,7 +75,7 @@ class TourController extends Controller
      * @param  \App\Models\tour  $tour
      * @return \Illuminate\Http\Response
      */
-    public function edit(tour $tour)
+    public function edit(Tour $tour)
     {
         //
     }
@@ -78,18 +84,23 @@ class TourController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\tour  $tour
+     * @param  \App\Models\Tour  $tour
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
+        $tour_name = $request->tour_name;
+        $tour_address = $request->tour_address;
+        $regency_id = $request->regency_id;
+        $province_id = $request->province_id;
+        $user_id = $request->user_id;
         try {
-            $tour_name = $request->tour_name;
-            $tour_address = $request->tour_address;
-
             $tour = Tour::find($id);
             $tour->tour_name = $tour_name;
             $tour->tour_address = $tour_address;
+            $tour->regency_id = $regency_id;
+            $tour->province_id = $province_id;
+            $tour->user_id = $user_id;
             $tour->save();
 
             return 'Data berhasil di Update!';
