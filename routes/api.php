@@ -43,3 +43,10 @@ Route::prefix('tour')->group(function () {
     Route::put('/update/{id}', 'TourController@update');
     Route::delete('/delete/{id}', 'TourController@delete');
 });
+
+Route::prefix('virtualtour')->group(function () {
+    Route::get('read', 'VirtualtourController@index');
+    Route::post('create', 'VirtualtourController@store');
+    Route::put('/update/{id}', 'VirtualtourController@update');
+    Route::delete('/delete/{id}', 'VirtualtourController@delete');
+});
