@@ -50,3 +50,10 @@ Route::prefix('virtualtour')->group(function () {
     Route::put('/update/{id}', 'VirtualtourController@update');
     Route::delete('/delete/{id}', 'VirtualtourController@delete');
 });
+
+Route::prefix('virtualtourgallery')->group(function () {
+    Route::get('read', 'VirtualtourgalleryController@index');
+    Route::post('create', 'VirtualtourgalleryController@store');
+    Route::put('/update/{id}', 'VirtualtourgalleryController@update');
+    Route::delete('/delete/{id}', 'VirtualtourgalleryController@delete');
+});
