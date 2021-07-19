@@ -13,47 +13,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::prefix('user')->group(function () {
-        Route::get('profile', 'UserController@profile');
+Route::middleware(['json.response'])->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('user')->group(function () {
+            Route::get('profile', 'UserController@profile');
+        });
     });
-});
 
-Route::prefix('auth')->group(function () {
-    Route::get('/forgot-password', function () {
-        return view('auth.forgot-password');
-    })->middleware('guest')->name('password.request');
+    Route::prefix('auth')->group(function () {
+        Route::get('/forgot-password', function () {
+            return view('auth.forgot-password');
+        })->middleware('guest')->name('password.request');
 
-    Route::get('/auth/reset/{token}', function ($token) {
-        return view('auth.reset-password', ['token' => $token]);
-    })->middleware('guest')->name('password.reset');
-});
+        Route::get('/auth/reset/{token}', function ($token) {
+            return view('auth.reset-password', ['token' => $token]);
+        })->middleware('guest')->name('password.reset');
+    });
 
-Route::prefix('auth')->group(function () {
-    Route::get('read', 'AuthController@index');
-    Route::post('register', 'AuthController@register');
-    Route::post('login', 'AuthController@login');
-    Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
-    Route::post('reset', 'AuthController@reset')->middleware('guest')->name('password.update');
-});
+    Route::prefix('auth')->group(function () {
+        Route::get('read', 'AuthController@index');
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
+        Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
+        Route::post('reset', 'AuthController@reset')->middleware('guest')->name('password.update');
+    });
 
-Route::prefix('tour')->group(function () {
-    Route::get('read', 'TourController@index');
-    Route::post('create', 'TourController@store');
-    Route::put('/update/{id}', 'TourController@update');
-    Route::delete('/delete/{id}', 'TourController@delete');
-});
+    Route::apiResource('tour', 'TourController');
 
-Route::prefix('virtualtour')->group(function () {
-    Route::get('read', 'VirtualtourController@index');
-    Route::post('create', 'VirtualtourController@store');
-    Route::put('/update/{id}', 'VirtualtourController@update');
-    Route::delete('/delete/{id}', 'VirtualtourController@delete');
-});
+    Route::apiResource('virtualtour', 'VirtualTourController');
 
-Route::prefix('virtualtourgallery')->group(function () {
-    Route::get('read', 'VirtualtourgalleryController@index');
-    Route::post('create', 'VirtualtourgalleryController@store');
-    Route::put('/update/{id}', 'VirtualtourgalleryController@update');
-    Route::delete('/delete/{id}', 'VirtualtourgalleryController@delete');
+    Route::apiResource('virtualtourgallery', 'VirtualTourGalleryController');
 });

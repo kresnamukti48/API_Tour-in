@@ -15,17 +15,15 @@ class TourController extends Controller
      */
     public function index()
     {
-        return responder()->success(Tour::all());
-    }
+        try {
+            return responder()->success([
+                'data' => Tour::all(),
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 
     /**
@@ -48,9 +46,12 @@ class TourController extends Controller
         ]);
 
         try {
-            Tour::create($request->all());
+            $tour = Tour::create($request->all());
 
-            return 'Data berhasil masuk!';
+            return responder()->success([
+                'message' => 'Data berhasil masuk!',
+                'data' => $tour,
+            ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
@@ -70,17 +71,6 @@ class TourController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\tour  $tour
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tour $tour)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -89,21 +79,20 @@ class TourController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tour_name = $request->tour_name;
-        $tour_address = $request->tour_address;
-        $regency_id = $request->regency_id;
-        $province_id = $request->province_id;
-        $user_id = $request->user_id;
+        $tour = Tour::findOrFail($id);
+
         try {
-            $tour = Tour::find($id);
-            $tour->tour_name = $tour_name;
-            $tour->tour_address = $tour_address;
-            $tour->regency_id = $regency_id;
-            $tour->province_id = $province_id;
-            $tour->user_id = $user_id;
+            $tour->tour_name = $request->tour_name;
+            $tour->tour_address = $request->tour_address;
+            $tour->regency_id = $request->regency_id;
+            $tour->province_id = $request->province_id;
+            $tour->user_id = $request->user_id;
             $tour->save();
 
-            return 'Data berhasil di Update!';
+            return responder()->success([
+                'message' => 'Data berhasil di Update!',
+                'data' => $tour,
+            ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
@@ -117,11 +106,20 @@ class TourController extends Controller
      * @param  \App\Models\tour  $tour
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
-        $tour = Tour::find($id);
-        $tour->delete();
+        $tour = Tour::findOrFail($id);
 
-        return 'Data berhasil di Hapus';
+        try {
+            $tour->delete();
+
+            return responder()->success([
+                'message' => 'Data berhasil di Hapus',
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 }
