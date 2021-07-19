@@ -30,7 +30,6 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::get('read', 'AuthController@index');
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
@@ -38,22 +37,24 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('tour')->group(function () {
-    Route::get('read', 'TourController@index');
+    Route::get('index', 'TourController@index');
     Route::post('create', 'TourController@store');
     Route::put('/update/{id}', 'TourController@update');
     Route::delete('/delete/{id}', 'TourController@delete');
 });
 
 Route::prefix('virtualtour')->group(function () {
-    Route::get('read', 'VirtualtourController@index');
+    Route::get('index', 'VirtualtourController@index');
     Route::post('create', 'VirtualtourController@store');
     Route::put('/update/{id}', 'VirtualtourController@update');
     Route::delete('/delete/{id}', 'VirtualtourController@delete');
 });
 
 Route::prefix('virtualtourgallery')->group(function () {
-    Route::get('read', 'VirtualtourgalleryController@index');
+    Route::get('index', 'VirtualtourgalleryController@index');
     Route::post('create', 'VirtualtourgalleryController@store');
     Route::put('/update/{id}', 'VirtualtourgalleryController@update');
     Route::delete('/delete/{id}', 'VirtualtourgalleryController@delete');
 });
+
+Route::apiResource('store', 'StoreController');
