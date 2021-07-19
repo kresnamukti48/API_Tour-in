@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Flugg\Responder\Exceptions\ConvertsExceptions;
 use Flugg\Responder\Exceptions\Http\HttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
     public function render($request, $exception)
     {
         if ($request->wantsJson()) {
+            $this->convert($exception, [
+                ModelNotFoundException::class => DataNotfoundException::class,
+            ]);
+
             $this->convertDefaultException($exception);
 
             if ($exception instanceof HttpException) {

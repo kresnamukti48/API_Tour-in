@@ -13,48 +13,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::prefix('user')->group(function () {
-        Route::get('profile', 'UserController@profile');
+Route::middleware(['json.response'])->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('user')->group(function () {
+            Route::get('profile', 'UserController@profile');
+        });
     });
+
+    Route::prefix('auth')->group(function () {
+        Route::get('/forgot-password', function () {
+            return view('auth.forgot-password');
+        })->middleware('guest')->name('password.request');
+
+        Route::get('/auth/reset/{token}', function ($token) {
+            return view('auth.reset-password', ['token' => $token]);
+        })->middleware('guest')->name('password.reset');
+    });
+
+    Route::prefix('auth')->group(function () {
+        Route::get('read', 'AuthController@index');
+        Route::post('register', 'AuthController@register');
+        Route::post('login', 'AuthController@login');
+        Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
+        Route::post('reset', 'AuthController@reset')->middleware('guest')->name('password.update');
+    });
+
+    Route::apiResource('tour', 'TourController');
+
+    Route::apiResource('virtualtour', 'VirtualTourController');
+
+    Route::apiResource('virtualtourgallery', 'VirtualTourGalleryController');
+
+    Route::apiResource('store', 'StoreController');
 });
-
-Route::prefix('auth')->group(function () {
-    Route::get('/forgot-password', function () {
-        return view('auth.forgot-password');
-    })->middleware('guest')->name('password.request');
-
-    Route::get('/auth/reset/{token}', function ($token) {
-        return view('auth.reset-password', ['token' => $token]);
-    })->middleware('guest')->name('password.reset');
-});
-
-Route::prefix('auth')->group(function () {
-    Route::post('register', 'AuthController@register');
-    Route::post('login', 'AuthController@login');
-    Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
-    Route::post('reset', 'AuthController@reset')->middleware('guest')->name('password.update');
-});
-
-Route::prefix('tour')->group(function () {
-    Route::get('index', 'TourController@index');
-    Route::post('create', 'TourController@store');
-    Route::put('/update/{id}', 'TourController@update');
-    Route::delete('/delete/{id}', 'TourController@delete');
-});
-
-Route::prefix('virtualtour')->group(function () {
-    Route::get('index', 'VirtualtourController@index');
-    Route::post('create', 'VirtualtourController@store');
-    Route::put('/update/{id}', 'VirtualtourController@update');
-    Route::delete('/delete/{id}', 'VirtualtourController@delete');
-});
-
-Route::prefix('virtualtourgallery')->group(function () {
-    Route::get('index', 'VirtualtourgalleryController@index');
-    Route::post('create', 'VirtualtourgalleryController@store');
-    Route::put('/update/{id}', 'VirtualtourgalleryController@update');
-    Route::delete('/delete/{id}', 'VirtualtourgalleryController@delete');
-});
-
-Route::apiResource('store', 'StoreController');

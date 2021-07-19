@@ -6,7 +6,7 @@ use App\Models\Virtualtour;
 use Illuminate\Http\Request;
 use Log;
 
-class VirtualtourController extends Controller
+class VirtualTourController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +15,15 @@ class VirtualtourController extends Controller
      */
     public function index()
     {
-        return responder()->success(Virtualtour::all());
-    }
+        try {
+            return responder()->success([
+                'data' => Virtualtour::all(),
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 
     /**
@@ -45,9 +43,12 @@ class VirtualtourController extends Controller
         ]);
 
         try {
-            Virtualtour::create($request->all());
+            $virtualtour = Virtualtour::create($request->all());
 
-            return 'Data berhasil masuk!';
+            return responder()->success([
+                'message' => 'Data berhasil masuk!',
+                'data' => $virtualtour,
+            ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
@@ -67,17 +68,6 @@ class VirtualtourController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -86,16 +76,25 @@ class VirtualtourController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id = $request->user_id;
-        $tour_id = $request->tour_id;
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'tour_id' => 'required|exists:tours,id',
+        ], [
+            'user_.exists' => 'User tidak valid',
+            'tour_id.exist' => 'Tempat wisata tidak valid',
+        ]);
+
+        $virtualtour = Virtualtour::findOrFail($id);
 
         try {
-            $virtualtour = Virtualtour::find($id);
-            $virtualtour->user_id = $user_id;
-            $virtualtour->tour_id = $tour_id;
+            $virtualtour->user_id = $request->user_id;
+            $virtualtour->tour_id = $request->tour_id;
             $virtualtour->save();
 
-            return 'Data berhasil di Update!';
+            return responder()->success([
+                'message' => 'Data berhasil di Update!',
+                'data' => $virtualtour,
+            ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
@@ -109,11 +108,20 @@ class VirtualtourController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy($id)
     {
-        $virtualtour = Virtualtour::find($id);
-        $virtualtour->delete();
+        $virtualtour = Virtualtour::findOrFail($id);
 
-        return 'Data berhasil di Hapus';
+        try {
+            $virtualtour->delete();
+
+            return responder()->success([
+                'message' => 'Data berhasil di Hapus',
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 }
