@@ -15,7 +15,7 @@ class VirtualtourController extends Controller
      */
     public function index()
     {
-        return Virtualtour::all();
+        return responder()->success(Virtualtour::all());
     }
 
     /**

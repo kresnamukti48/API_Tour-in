@@ -15,7 +15,7 @@ class TourController extends Controller
      */
     public function index()
     {
-        return Tour::all();
+        return responder()->success(Tour::all());
     }
 
     /**

@@ -16,7 +16,7 @@ class VirtualtourgalleryController extends Controller
      */
     public function index()
     {
-        return Virtualtourgallery::all();
+        return responder()->success(Virtualtourgallery::all());
     }
 
     /**
@@ -37,17 +37,25 @@ class VirtualtourgalleryController extends Controller
      */
     public function store(Request $request)
     {
-        $virtualtourgallery = new Virtualtourgallery;
-        $virtualtourgallery->name = $request->input('name');
-        $virtualtourgallery->virtualtour_id = $request->get('virtualtour_id');
-        if ($request->hasfile('gallery')) {
-            $file = $request->file('gallery');
-            $extention = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extention;
-            $file->move('uploads/virtualtourgallery/', $filename);
-            $virtualtourgallery->gallery = $filename;
-        }
+        $request->validate([
+            'name' => 'required',
+            'gallery' => 'required',
+            'virtualtour_id' => 'required|exists:virtualtours,id',
+        ], [
+            'virtualtour_id.exist' => 'Tempat wisata tidak valid',
+        ]);
+
         try {
+            $virtualtourgallery = new Virtualtourgallery;
+            $virtualtourgallery->name = $request->input('name');
+            $virtualtourgallery->virtualtour_id = $request->get('virtualtour_id');
+            if ($request->hasfile('gallery')) {
+                $file = $request->file('gallery');
+                $extention = $file->getClientOriginalExtension();
+                $filename = time().'.'.$extention;
+                $file->move('uploads/virtualtourgallery/', $filename);
+                $virtualtourgallery->gallery = $filename;
+            }
             $virtualtourgallery->save();
 
             return 'Gallery image Added Successfully';
@@ -94,7 +102,7 @@ class VirtualtourgalleryController extends Controller
         $Virtualtourgallery->virtualtour_id = $request->input('virtualtour_id');
 
         if ($request->hasfile('gallery')) {
-            $destination = 'uploads/Virtualtourgallery/'.$Virtualtourgallery->gallery;
+            $destination = 'uploads/virtualtourgallery/'.$Virtualtourgallery->gallery;
             if (File::exists($destination)) {
                 File::delete($destination);
             }
@@ -124,7 +132,7 @@ class VirtualtourgalleryController extends Controller
     public function delete($id)
     {
         $virtualtourgallery = Virtualtourgallery::find($id);
-        $destination = 'uploads/virut$virtualtourgallery/'.$virtualtourgallery->gallery;
+        $destination = 'uploads/virtualtourgallery/'.$virtualtourgallery->gallery;
         if (File::exists($destination)) {
             File::delete($destination);
         }

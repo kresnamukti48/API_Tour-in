@@ -82,6 +82,7 @@ class AuthController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'password' => bcrypt($request->password),
+
             ]);
 
             DB::commit();
