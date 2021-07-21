@@ -45,4 +45,6 @@ Route::middleware(['json.response'])->group(function () {
     Route::apiResource('virtualtourgallery', 'VirtualTourGalleryController');
 
     Route::apiResource('store', 'StoreController');
+
+    Route::apiResource('ticket', 'TicketController');
 });

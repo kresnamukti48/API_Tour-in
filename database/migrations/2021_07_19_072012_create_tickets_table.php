@@ -12,20 +12,15 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('stores', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedbigInteger('user_id');
             $table->unsignedbigInteger('tour_id');
-            $table->char('regency_id', 4);
-            $table->char('province_id', 2);
-            $table->string('store_name');
-            $table->string('store_address');
+            $table->integer('ticket_qty');
+            $table->integer('ticket_price');
+            $table->date('checkin');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('tour_id')->references('id')->on('tours');
-            $table->foreign('regency_id')->references('id')->on('master_indonesia_cities');
-            $table->foreign('province_id')->references('id')->on('master_indonesia_provinces');
         });
     }
 
@@ -36,6 +31,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('tickets');
     }
 };
