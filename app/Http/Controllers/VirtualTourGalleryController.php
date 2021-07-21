@@ -98,7 +98,7 @@ class VirtualTourGalleryController extends Controller
             'gallery' => 'required|image',
             'virtualtour_id' => 'required|exists:virtualtours,id',
         ], [
-            'virtualtour_id.exist' => 'Tempat wisata tidak valid',
+            'virtualtour_id.exists' => 'Tempat wisata tidak valid',
         ]);
 
         $virtualtourgallery = Virtualtourgallery::findorFail($id);

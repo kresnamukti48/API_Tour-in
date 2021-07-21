@@ -40,8 +40,8 @@ class TicketController extends Controller
             'checkin' => 'required|date',
             'tour_id' => 'required|exists:tours,id',
         ], [
-            'checkin.date' => 'Format tanggal lahir tidak sesuai',
-            'tour_id.exist' => 'Tempat Wisata tidak valid',
+            'checkin.date' => 'Format Tanggal tidak sesuai',
+            'tour_id.exists' => 'Tempat Wisata tidak valid',
 
         ]);
 

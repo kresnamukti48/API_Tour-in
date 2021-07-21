@@ -39,7 +39,7 @@ class VirtualTourController extends Controller
             'tour_id' => 'required|exists:tours,id',
         ], [
             'user_.exists' => 'User tidak valid',
-            'tour_id.exist' => 'Tempat wisata tidak valid',
+            'tour_id.exists' => 'Tempat wisata tidak valid',
         ]);
 
         try {

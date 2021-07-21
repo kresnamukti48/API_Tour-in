@@ -42,7 +42,7 @@ class TourController extends Controller
             'user_id' => 'required|exists:users,id',
         ], [
             'regency_id.exists' => 'Kota/Kabupaten tidak valid',
-            'province_id.exist' => 'Provinsi tidak valid',
+            'province_id.exists' => 'Provinsi tidak valid',
         ]);
 
         try {

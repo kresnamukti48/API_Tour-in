@@ -47,4 +47,6 @@ Route::middleware(['json.response'])->group(function () {
     Route::apiResource('store', 'StoreController');
 
     Route::apiResource('ticket', 'TicketController');
+
+    Route::apiResource('souvenir', 'SouvenirController');
 });
