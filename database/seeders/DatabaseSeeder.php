@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             LaravoltSeeder::class,
+            RoleSeedeer::class,
         ]);
     }
 }

@@ -2,15 +2,15 @@
 
 // @formatter:off
 
-    /**
-     * A helper file for Laravel, to provide autocomplete information to your IDE
-     * Generated for Laravel 8.49.1.
-     *
-     * This file should not be included in your code, only analyzed by your IDE!
-     *
-     * @author Barry vd. Heuvel <barryvdh@gmail.com>
-     * @see https://github.com/barryvdh/laravel-ide-helper
-     */
+/**
+ * A helper file for Laravel, to provide autocomplete information to your IDE
+ * Generated for Laravel 8.49.1.
+ *
+ * This file should not be included in your code, only analyzed by your IDE!
+ *
+ * @author Barry vd. Heuvel <barryvdh@gmail.com>
+ * @see https://github.com/barryvdh/laravel-ide-helper
+ */
 
 namespace Illuminate\Support\Facades {
         /**
@@ -16899,6 +16899,33 @@ namespace Illuminate\Http {
             public static function hasValidRelativeSignature()
             {
                 return \Illuminate\Http\Request::hasValidRelativeSignature();
+            }
+        }
+
+}
+
+namespace Illuminate\Routing {
+
+        class Route
+        {
+            /**
+             * @see \Spatie\Permission\PermissionServiceProvider::registerMacroHelpers()
+             * @param mixed $roles
+             * @static
+             */
+            public static function role($roles = [])
+            {
+                return \Illuminate\Routing\Route::role($roles);
+            }
+
+            /**
+             * @see \Spatie\Permission\PermissionServiceProvider::registerMacroHelpers()
+             * @param mixed $permissions
+             * @static
+             */
+            public static function permission($permissions = [])
+            {
+                return \Illuminate\Routing\Route::permission($permissions);
             }
         }
 
