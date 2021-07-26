@@ -15,22 +15,22 @@ class RoleSeedeer extends Seeder
     public function run()
     {
         // Admin
-        Role::create([
+        Role::firstOrCreate([
             'name' => Role::ROLE_ADMIN,
         ]);
 
         // User
-        Role::create([
+        Role::firstOrCreate([
             'name' => Role::ROLE_USER,
         ]);
 
         // Seller
-        Role::create([
+        Role::firstOrCreate([
             'name' => Role::ROLE_SELLER,
         ]);
 
         // Tour Manager
-        Role::create([
+        Role::firstOrCreate([
             'name' => Role::ROLE_TOUR_MANAGER,
         ]);
     }
