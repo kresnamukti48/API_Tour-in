@@ -80,6 +80,16 @@ class TicketController extends Controller
     public function update(Request $request, $id)
     {
         $ticket = Ticket::findOrFail($id);
+        $request->validate([
+            'ticket_qty' => 'required',
+            'ticket_price' => 'required',
+            'checkin' => 'required|date',
+            'tour_id' => 'required|exists:tours,id',
+        ], [
+            'checkin.date' => 'Format Tanggal tidak sesuai',
+            'tour_id.exists' => 'Tempat Wisata tidak valid',
+
+        ]);
 
         try {
             $ticket->ticket_qty = $request->ticket_qty;

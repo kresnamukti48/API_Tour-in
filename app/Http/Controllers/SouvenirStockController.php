@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Store;
+use App\Models\SouvenirStock;
 use Illuminate\Http\Request;
 use Log;
 
-class StoreController extends Controller
+class SouvenirStockController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class StoreController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Store::all(),
+                'data' => SouvenirStock::all(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
@@ -35,26 +35,29 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'store_name' => 'required',
-            'store_address' => 'required',
-            'regency_id' => 'required|exists:master_indonesia_cities,id',
-            'province_id' => 'required|exists:master_indonesia_provinces,id',
-            'user_id' => 'required|exists:users,id',
-            'tour_id' => 'required|exists:tours,id',
+            'date' => 'required|date',
+            'qty_in' => 'required',
+            'qty_out' => 'required',
+            'souvenir_id' => 'required|exists:souvenirs,id',
         ], [
-            'regency_id.exists' => 'Kota/Kabupaten tidak valid',
-            'province_id.exists' => 'Provinsi tidak valid',
-            'user_id.exists' => 'User tidak valid',
-            'tour_id.exists' => 'Tempat Wisata tidak valid',
+            'date.date' => 'Format Tanggal tidak sesuai',
+            'souvenir_id.exists' => 'Souvenir tidak valid',
 
         ]);
 
+        $stock = new SouvenirStock();
+
         try {
-            $store = Store::create($request->all());
+            $stock->date = $request->date;
+            $stock->qty_in = $request->qty_in;
+            $stock->qty_out = $request->qty_out;
+            $stock->note = $request->note;
+            $stock->souvenir_id = $request->souvenir_id;
+            $stock->save();
 
             return responder()->success([
                 'message' => 'Data berhasil masuk!',
-                'data' => $store,
+                'data' => $stock,
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
@@ -83,34 +86,28 @@ class StoreController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $store = Store::findOrFail($id);
+        $stock = SouvenirStock::findOrFail($id);
         $request->validate([
-            'store_name' => 'required',
-            'store_address' => 'required',
-            'regency_id' => 'required|exists:master_indonesia_cities,id',
-            'province_id' => 'required|exists:master_indonesia_provinces,id',
-            'user_id' => 'required|exists:users,id',
-            'tour_id' => 'required|exists:tours,id',
+            'date' => 'required|date',
+            'qty_in' => 'required',
+            'qty_out' => 'required',
+            'souvenir_id' => 'required|exists:souvenirs,id',
         ], [
-            'regency_id.exists' => 'Kota/Kabupaten tidak valid',
-            'province_id.exists' => 'Provinsi tidak valid',
-            'user_id.exists' => 'User tidak valid',
-            'tour_id.exists' => 'Tempat Wisata tidak valid',
+            'date.date' => 'Format Tanggal tidak sesuai',
+            'souvenir_id.exists' => 'Souvenir tidak valid',
 
         ]);
 
         try {
-            $store->store_name = $request->store_name;
-            $store->store_address = $request->store_address;
-            $store->regency_id = $request->regency_id;
-            $store->province_id = $request->province_id;
-            $store->user_id = $request->user_id;
-            $store->tour_id = $request->tour_id;
-            $store->save();
+            $stock->date = $request->date;
+            $stock->qty_in = $request->qty_in;
+            $stock->qty_out = $request->qty_out;
+            $stock->souvenir_id = $request->souvenir_id;
+            $stock->save();
 
             return responder()->success([
                 'message' => 'Data berhasil di Update!',
-                'data' => $store,
+                'data' => $stock,
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
@@ -127,9 +124,9 @@ class StoreController extends Controller
      */
     public function destroy($id)
     {
-        $store = Store::findOrFail($id);
+        $stock = SouvenirStock::findOrFail($id);
         try {
-            $store->delete();
+            $stock->delete();
 
             return responder()->success([
                 'message' => 'Data berhasil di Hapus',

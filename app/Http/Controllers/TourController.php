@@ -80,6 +80,16 @@ class TourController extends Controller
     public function update(Request $request, $id)
     {
         $tour = Tour::findOrFail($id);
+        $request->validate([
+            'tour_name' => 'required',
+            'tour_address' => 'required',
+            'regency_id' => 'required|exists:master_indonesia_cities,id',
+            'province_id' => 'required|exists:master_indonesia_provinces,id',
+            'user_id' => 'required|exists:users,id',
+        ], [
+            'regency_id.exists' => 'Kota/Kabupaten tidak valid',
+            'province_id.exists' => 'Provinsi tidak valid',
+        ]);
 
         try {
             $tour->tour_name = $request->tour_name;

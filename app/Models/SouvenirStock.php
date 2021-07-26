@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Ticket extends Model
+class SouvenirStock extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['ticket_qty', 'ticket_price', 'checkin', 'tour_id'];
+    protected $fillable = ['date', 'qty_in', 'qty_out', 'note', 'souvenir_id'];
 }

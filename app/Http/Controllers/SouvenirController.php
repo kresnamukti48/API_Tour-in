@@ -78,6 +78,14 @@ class SouvenirController extends Controller
     public function update(Request $request, $id)
     {
         $souvenir = Souvenir::findOrFail($id);
+        $request->validate([
+            'souvenir_name' => 'required',
+            'souvenir_price' => 'required',
+            'store_id' => 'required|exists:stores,id',
+        ], [
+            'store_id.exists' => 'Toko tidak valid',
+
+        ]);
 
         try {
             $souvenir->souvenir_name = $request->souvenir_name;
