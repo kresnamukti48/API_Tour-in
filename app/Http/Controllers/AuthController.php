@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Log;
+use Socialite;
 use Str;
 
 class AuthController extends Controller
@@ -138,5 +139,55 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? responder()->success(['status' => __($status)])
             : back()->withErrors(['email' => [__($status)]]);
+    }
+
+    public function authSocial($social)
+    {
+        return Socialite::driver($social)->stateless()->redirect();
+    }
+
+    public function authSocialCallback($social)
+    {
+        try {
+            $token = request()->get('token');
+            if (! empty($token)) {
+                $data = Socialite::driver($social)->stateless()->userFromToken($token);
+            } else {
+                $data = Socialite::driver($social)->stateless()->user();
+            }
+
+            $user = $this->user->firstOrCreate([
+                'email' => $data->getEmail(),
+            ], [
+                'name' => $data->getName(),
+                'username' => $this->generateUsername($data->getId()),
+                'password' => bcrypt($data->getEmail()),
+            ]);
+
+            $user['token'] = $user->createToken(Str::random(32))->plainTextToken;
+
+            return responder()->success([
+                'data' => $user,
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
+    }
+
+    private function generateUsername($social_id = null)
+    {
+        $username = $social_id ?? random_int(100000, 999999);
+        if ($this->checkUsername($username)) {
+            return $this->generateUsername();
+        }
+
+        return $username;
+    }
+
+    private function checkUsername($username)
+    {
+        return $this->user->whereUsername($username)->exists();
     }
 }

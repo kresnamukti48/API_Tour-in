@@ -36,6 +36,9 @@ Route::middleware(['json.response'])->group(function () {
         Route::post('login', 'AuthController@login');
         Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
         Route::post('reset', 'AuthController@reset')->middleware('guest')->name('password.update');
+
+        Route::get('/social/{social}/redirect', 'AuthController@authSocial');
+        Route::get('/social/{social}/callback', 'AuthController@authSocialCallback');
     });
 
     Route::apiResource('tour', 'TourController');
