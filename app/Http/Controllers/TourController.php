@@ -17,7 +17,7 @@ class TourController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Tour::all(),
+                'data' => Tour::with(['user', 'province', 'regency', 'virtual_tour', 'store', 'ticket'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

@@ -25,7 +25,7 @@ class VirtualTourGalleryController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Virtualtourgallery::all(),
+                'data' => Virtualtourgallery::with(['virtual_tour'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

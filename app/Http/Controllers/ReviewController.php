@@ -17,7 +17,7 @@ class ReviewController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Review::all(),
+                'data' => Review::with(['user'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

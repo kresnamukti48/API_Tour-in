@@ -17,7 +17,7 @@ class TicketController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Ticket::all(),
+                'data' => Ticket::with(['tour'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

@@ -17,7 +17,7 @@ class SouvenirController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Souvenir::all(),
+                'data' => Souvenir::with(['store', 'souvenir_stock'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

@@ -9,4 +9,14 @@ class Souvenir extends Model
 {
     use SoftDeletes;
     protected $fillable = ['souvenir_name', 'souvenir_price', 'store_id'];
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
+
+    public function souvenir_stock()
+    {
+        return $this->hasMany(SouvenirStock::class, 'souvenir_id');
+    }
 }

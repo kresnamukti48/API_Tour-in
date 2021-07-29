@@ -17,7 +17,7 @@ class StoreController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Store::all(),
+                'data' => Store::with(['user', 'province', 'regency', 'tour'])->get(),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

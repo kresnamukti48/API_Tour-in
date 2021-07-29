@@ -9,4 +9,9 @@ class Virtualtourgallery extends Model
 {
     use SoftDeletes;
     protected $fillable = ['name', 'gallery', 'virtualtour_id'];
+
+    public function virtual_tour()
+    {
+        return $this->belongsTo(Virtualtour::class, 'virtualtour_id');
+    }
 }
