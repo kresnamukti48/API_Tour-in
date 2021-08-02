@@ -13,12 +13,17 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $table = Ticket::query();
         try {
-            return responder()->success([
-                'data' => Ticket::with(['tour'])->get(),
-            ]);
+            $tour_id = $request->input('tour_id');
+            if (! empty($tour_id)) {
+                $table = $table->where('tour_id', $tour_id);
+            }
+            $table = $table->orderBy('id', 'DESC')->get();
+
+            return responder()->success($table);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
@@ -35,12 +40,11 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ticket_qty' => 'required',
+            'ticket_name' => 'required',
             'ticket_price' => 'required',
-            'checkin' => 'required|date',
+            'detail' => 'required',
             'tour_id' => 'required|exists:tours,id',
         ], [
-            'checkin.date' => 'Format Tanggal tidak sesuai',
             'tour_id.exists' => 'Tempat Wisata tidak valid',
 
         ]);
@@ -81,20 +85,19 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
         $request->validate([
-            'ticket_qty' => 'required',
+            'ticket_name' => 'required',
             'ticket_price' => 'required',
-            'checkin' => 'required|date',
+            'detail' => 'required',
             'tour_id' => 'required|exists:tours,id',
         ], [
-            'checkin.date' => 'Format Tanggal tidak sesuai',
             'tour_id.exists' => 'Tempat Wisata tidak valid',
 
         ]);
 
         try {
-            $ticket->ticket_qty = $request->ticket_qty;
+            $ticket->ticket_name = $request->ticket_name;
             $ticket->ticket_price = $request->ticket_price;
-            $ticket->checkin = $request->checkin;
+            $ticket->detail = $request->detail;
             $ticket->tour_id = $request->tour_id;
             $ticket->save();
 
