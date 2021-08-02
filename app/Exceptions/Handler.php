@@ -4,8 +4,10 @@ namespace App\Exceptions;
 
 use Flugg\Responder\Exceptions\ConvertsExceptions;
 use Flugg\Responder\Exceptions\Http\HttpException;
+use Flugg\Responder\Exceptions\Http\UnauthorizedException as HttpUnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -49,6 +51,7 @@ class Handler extends ExceptionHandler
         if ($request->wantsJson()) {
             $this->convert($exception, [
                 ModelNotFoundException::class => DataNotfoundException::class,
+                UnauthorizedException::class => HttpUnauthorizedException::class,
             ]);
 
             $this->convertDefaultException($exception);

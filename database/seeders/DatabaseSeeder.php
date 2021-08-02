@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LaravoltSeeder::class,
             RoleSeedeer::class,
+            PaymentVendorSeeder::class,
+            PaymentCategorySeeder::class,
+            PaymentVendorMethodSeeder::class,
         ]);
     }
 }
