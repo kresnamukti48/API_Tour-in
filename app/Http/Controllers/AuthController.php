@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use DB;
 use Illuminate\Auth\Events\PasswordReset;
@@ -83,8 +84,109 @@ class AuthController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'password' => bcrypt($request->password),
-
             ]);
+
+            $user->syncRoles(Role::ROLE_USER);
+
+            DB::commit();
+
+            return responder()->success($user);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
+    }
+
+    public function register_seller(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:users,username',
+            'name' => 'required',
+            'email' => 'required|unique:users,email|email:rfc,strict,dns',
+            'birthdate' => 'required|date',
+            'gender' => 'required|numeric',
+            'password' => 'required|confirmed',
+        ], [
+            'username.required' => 'Kolom username harus di isi',
+            'username.unique' => 'Username sudah digunakan',
+            'name.required' => 'Kolom nama harus di isi',
+            'email.required' => 'Kolom email harus di isi',
+            'email.unique' => 'Email sudah digunakan',
+            'email.email' => 'Email tidak valid',
+            'birthdate.required' => 'Tanggal lahir harus di isi',
+            'birthdate.date' => 'Format tanggal lahir tidak sesuai',
+            'gender.required' => 'Jenis kelamin harus di isi',
+            'gender.numeric' => 'Jenis kelamin tidak valid',
+            'password.required' => 'Kolom password harus di isi',
+            'password.confirmed' => 'Password tidak sesuai',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $user = $this->user->create([
+                'username' => $request->username,
+                'name' => $request->name,
+                'email' => $request->email,
+                'birthdate' => $request->birthdate,
+                'gender' => $request->gender,
+                'password' => bcrypt($request->password),
+            ]);
+
+            $user->syncRoles(Role::ROLE_SELLER);
+
+            DB::commit();
+
+            return responder()->success($user);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
+    }
+
+    public function register_manager(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|unique:users,username',
+            'name' => 'required',
+            'email' => 'required|unique:users,email|email:rfc,strict,dns',
+            'birthdate' => 'required|date',
+            'gender' => 'required|numeric',
+            'password' => 'required|confirmed',
+        ], [
+            'username.required' => 'Kolom username harus di isi',
+            'username.unique' => 'Username sudah digunakan',
+            'name.required' => 'Kolom nama harus di isi',
+            'email.required' => 'Kolom email harus di isi',
+            'email.unique' => 'Email sudah digunakan',
+            'email.email' => 'Email tidak valid',
+            'birthdate.required' => 'Tanggal lahir harus di isi',
+            'birthdate.date' => 'Format tanggal lahir tidak sesuai',
+            'gender.required' => 'Jenis kelamin harus di isi',
+            'gender.numeric' => 'Jenis kelamin tidak valid',
+            'password.required' => 'Kolom password harus di isi',
+            'password.confirmed' => 'Password tidak sesuai',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $user = $this->user->create([
+                'username' => $request->username,
+                'name' => $request->name,
+                'email' => $request->email,
+                'birthdate' => $request->birthdate,
+                'gender' => $request->gender,
+                'password' => bcrypt($request->password),
+            ]);
+
+            $user->profile_manager()->create([
+                'status' => 0,
+            ]);
+
+            $user->syncRoles(Role::ROLE_TOUR_MANAGER);
 
             DB::commit();
 
@@ -163,6 +265,8 @@ class AuthController extends Controller
                 'username' => $this->generateUsername($data->getId()),
                 'password' => bcrypt($data->getEmail()),
             ]);
+
+            $user->syncRoles(Role::ROLE_USER);
 
             $user['token'] = $user->createToken(Str::random(32))->plainTextToken;
 
