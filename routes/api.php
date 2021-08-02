@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['json.response'])->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('admin')->middleware(['role:'.Role::ROLE_ADMIN])->namespace('Admin')->group(function () {
+            Route::namespace('Payment')->group(function () {
+                Route::get('payment-vendor/trashed', 'PaymentVendorController@trashed');
+                Route::post('payment-vendor/{id}/restore', 'PaymentVendorController@restore');
+                Route::apiResource('payment-vendor', 'PaymentVendorController')->except(['show'])->parameter('payment-vendor', 'paymentVendor');
+
+                Route::get('payment-category/trashed', 'PaymentCategoryController@trashed');
+                Route::post('payment-category/{id}/restore', 'PaymentCategoryController@restore');
+                Route::apiResource('payment-category', 'PaymentCategoryController')->except(['show'])->parameter('payment-category', 'paymentCategory');
+
+                Route::get('payment-method/trashed', 'PaymentVendorMethodController@trashed');
+                Route::post('payment-method/{id}/restore', 'PaymentVendorMethodController@restore');
+                Route::apiResource('payment-method', 'PaymentVendorMethodController')->except(['show'])->parameter('payment-method', 'paymentVendorMethod');
+
+                Route::get('payment-channel/trashed', 'PaymentChannelsController@trashed');
+                Route::post('payment-channel/{id}/restore', 'PaymentChannelsController@restore');
+                Route::apiResource('payment-channel', 'PaymentChannelsController')->except(['show'])->parameter('payment-channel', 'paymentChannels');
+            });
+        });
+
         Route::prefix('user')->group(function () {
             Route::get('profile', 'UserController@profile');
         });
