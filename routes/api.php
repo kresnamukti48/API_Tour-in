@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+
+})->name('index');
+
 Route::middleware(['json.response'])->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('admin')->middleware(['role:'.Role::ROLE_ADMIN])->namespace('Admin')->group(function () {
@@ -38,6 +42,10 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::prefix('user')->group(function () {
             Route::get('profile', 'UserController@profile');
+        });
+
+        Route::middleware(['role:'.Role::ROLE_USER])->group(function () {
+            Route::apiResource('order-ticket', 'OrderTicketController');
         });
     });
 
@@ -80,5 +88,8 @@ Route::middleware(['json.response'])->group(function () {
 
     Route::apiResource('review', 'ReviewController');
 
-    Route::apiResource('orderticket', 'OrderTicketController');
+    Route::prefix('status')->group(function () {
+        Route::get('{trxid}', 'StatusController@index')->name('status');
+        Route::any('{vendor}/{trxid?}', 'StatusController@callback');
+    });
 });
