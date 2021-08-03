@@ -21,7 +21,7 @@ class TicketController extends Controller
             if (! empty($tour_id)) {
                 $table = $table->where('tour_id', $tour_id);
             }
-            $table = $table->orderBy('id', 'DESC')->get();
+            $table = $table->orderBy('id', 'DESC')->paginate(10);
 
             return responder()->success($table);
         } catch (\Throwable $th) {

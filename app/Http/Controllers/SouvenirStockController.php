@@ -17,7 +17,7 @@ class SouvenirStockController extends Controller
     {
         try {
             return responder()->success([
-                'data' => SouvenirStock::with(['souvenir'])->get(),
+                'data' => SouvenirStock::with(['souvenir'])->paginate(10),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

@@ -17,7 +17,7 @@ class VirtualTourController extends Controller
     {
         try {
             return responder()->success([
-                'data' => Virtualtour::with(['tour', 'virtual_tour_gallery'])->get(),
+                'data' => Virtualtour::with(['tour', 'virtual_tour_gallery'])->paginate(10),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

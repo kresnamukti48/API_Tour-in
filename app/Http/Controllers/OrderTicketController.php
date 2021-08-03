@@ -21,7 +21,7 @@ class OrderTicketController extends Controller
     {
         try {
             return responder()->success([
-                'data' => OrderTicket::with(['user', 'ticket'])->paginate(10),
+                'data' => OrderTicket::with(['user', 'ticket', 'payment_channel'])->paginate(10),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
