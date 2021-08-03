@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'frontend_url' => env('FRONTEND_URL', null),
     'payment' => [
         'midtrans' => [
             'server_key' => env('PAYMENT_MIDTRANS_SERVER_KEY'),

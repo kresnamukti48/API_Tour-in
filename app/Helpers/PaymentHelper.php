@@ -1,21 +1,22 @@
 <?php
 
+use App\Models\OrderTicket;
 use App\Models\PaymentVendor;
 use Midtrans\Snap;
 use Xendit\Invoice;
 
-if (! function_exists('createPayment')) {
+if (!function_exists('createPayment')) {
     function createPayment($type, $trxid, $redirectUrl = null)
     {
         $data = null;
         switch ($type) {
             case 'ticket':
-                // $data = OrderConsult::whereTrxid($trxid)->firstOrFail();
+                $data = OrderTicket::whereTrxId($trxid)->firstOrFail();
                 break;
         }
 
         $channel = $data->payment_channel;
-        $vendor_method = $channel->vendor_method;
+        $vendor_method = $channel->method;
         $vendor = $vendor_method->vendor;
 
         if ($vendor->id == PaymentVendor::VENDOR_TRIPAY) {
@@ -30,8 +31,8 @@ if (! function_exists('createPayment')) {
             $params = [
                 'external_id' => $trxid,
                 'payer_email' => $data->email,
-                'description' => $data->service->code.' - '.$data->service->name,
-                'amount' => $data->total_payment,
+                'description' => $data->ticket->ticket_name,
+                'amount' => $data->total,
                 'success_redirect_url' => $redirectUrl,
                 'failure_redirect_url' => $redirectUrl,
                 'payment_methods' => [$vendor_method->code],
@@ -60,7 +61,7 @@ if (! function_exists('createPayment')) {
                         'id' => $data->service->code,
                         'price' => $data->total_payment,
                         'quantity' => 1,
-                        'name' => $data->service->code.' - '.$data->service->name,
+                        'name' => $data->service->code . ' - ' . $data->service->name,
                     ],
                 ],
                 'customer_details' => [

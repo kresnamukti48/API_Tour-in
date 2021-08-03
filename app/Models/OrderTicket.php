@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OrderTicket extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'ticket_id',
@@ -16,6 +17,7 @@ class OrderTicket extends Model
         'phone',
         'email',
         'ticket_price',
+        'payment_id',
         'mark_up_fee',
         'payment_fee',
         'discount_item',
@@ -23,7 +25,13 @@ class OrderTicket extends Model
         'total',
         'payment_ref',
         'merchant_ref',
+        'status',
     ];
+
+    public const STATUS_WAITING = 0;
+    public const STATUS_PROCESS = 1;
+    public const STATUS_SUCCESS = 2;
+    public const STATUS_EXPIRED = 3;
 
     public function user()
     {
@@ -33,5 +41,10 @@ class OrderTicket extends Model
     public function ticket()
     {
         return $this->belongsTo(Ticket::class, 'ticket_id');
+    }
+
+    public function payment_channel()
+    {
+        return $this->belongsTo(PaymentChannels::class, 'payment_id');
     }
 }
