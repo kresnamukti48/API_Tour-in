@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-
 })->name('index');
 
 Route::middleware(['json.response'])->group(function () {
@@ -46,6 +45,7 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::middleware(['role:'.Role::ROLE_USER])->group(function () {
             Route::apiResource('order-ticket', 'OrderTicketController');
+            Route::apiResource('order-souvenir', 'OrderSouvenirController');
         });
     });
 
