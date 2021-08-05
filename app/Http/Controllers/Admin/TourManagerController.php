@@ -9,7 +9,7 @@ use DB;
 use Illuminate\Http\Request;
 use Log;
 
-class UserController extends Controller
+class TourManagerController extends Controller
 {
     public function __construct()
     {
@@ -73,10 +73,10 @@ class UserController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'password' => bcrypt($request->password),
-                'status' => User::STATUS_APPROVED,
+                'status' => User::STATUS_PENDING,
             ]);
 
-            $user->syncRoles(Role::ROLE_USER);
+            $user->syncRoles(Role::ROLE_TOUR_MANAGER);
 
             DB::commit();
 
