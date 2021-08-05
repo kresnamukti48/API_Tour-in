@@ -183,7 +183,7 @@ class AuthController extends Controller
             ]);
 
             $user->profile_manager()->create([
-                'status' => 0,
+                'status' => User::STATUS_PENDING,
             ]);
 
             $user->syncRoles(Role::ROLE_TOUR_MANAGER);

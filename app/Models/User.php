@@ -28,6 +28,9 @@ class User extends Authenticatable
         'password',
     ];
 
+    public const STATUS_PENDING = 0;
+    public const STATUS_APPROVED = 1;
+
     /**
      * The attributes that should be hidden for arrays.
      *
