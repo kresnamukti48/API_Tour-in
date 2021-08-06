@@ -9,7 +9,7 @@ use DB;
 use Illuminate\Http\Request;
 use Log;
 
-class TourManagerController extends Controller
+class SellerController extends Controller
 {
     public function __construct()
     {
@@ -25,7 +25,7 @@ class TourManagerController extends Controller
     {
         try {
             return responder()->success([
-                'data' => User::where('id', Role::ROLE_TOUR_MANAGER)->paginate(10),
+                'data' => User::where('id', Role::ROLE_SELLER)->paginate(10),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
@@ -76,7 +76,7 @@ class TourManagerController extends Controller
                 'status' => User::STATUS_PENDING,
             ]);
 
-            $user->syncRoles(Role::ROLE_TOUR_MANAGER);
+            $user->syncRoles(Role::ROLE_SELLER);
 
             DB::commit();
 

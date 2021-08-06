@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         try {
             return responder()->success([
-                'data' => User::all()->paginate(10),
+                'data' => User::where('id', Role::ROLE_USER)->paginate(10),
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

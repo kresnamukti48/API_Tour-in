@@ -40,6 +40,7 @@ Route::middleware(['json.response'])->group(function () {
 
             Route::apiResource('user', 'UserController');
             Route::apiResource('tour-manager', 'TourManagerController');
+            Route::apiResource('seller', 'SellerController');
         });
 
         Route::prefix('user')->group(function () {

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'birthdate',
         'gender',
         'password',
+        'status',
     ];
 
     public const STATUS_PENDING = 0;
