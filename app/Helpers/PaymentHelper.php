@@ -1,17 +1,25 @@
 <?php
 
+use App\Models\OrderSouvenir;
 use App\Models\OrderTicket;
 use App\Models\PaymentVendor;
 use Midtrans\Snap;
 use Xendit\Invoice;
 
-if (!function_exists('createPayment')) {
+if (! function_exists('createPayment')) {
     function createPayment($type, $trxid, $redirectUrl = null)
     {
         $data = null;
+        $description = null;
         switch ($type) {
             case 'ticket':
                 $data = OrderTicket::whereTrxId($trxid)->firstOrFail();
+                $description = $data->ticket->ticket_name;
+                break;
+
+            case 'souvenir':
+                $data = OrderSouvenir::whereTrxId($trxid)->firstOrFail();
+                $description = $data->souvenir->souvenir_name;
                 break;
         }
 
@@ -31,7 +39,7 @@ if (!function_exists('createPayment')) {
             $params = [
                 'external_id' => $trxid,
                 'payer_email' => $data->email,
-                'description' => $data->ticket->ticket_name,
+                'description' => $description,
                 'amount' => $data->total,
                 'success_redirect_url' => $redirectUrl,
                 'failure_redirect_url' => $redirectUrl,
@@ -61,7 +69,7 @@ if (!function_exists('createPayment')) {
                         'id' => $data->service->code,
                         'price' => $data->total_payment,
                         'quantity' => 1,
-                        'name' => $data->service->code . ' - ' . $data->service->name,
+                        'name' => $data->service->code.' - '.$data->service->name,
                     ],
                 ],
                 'customer_details' => [

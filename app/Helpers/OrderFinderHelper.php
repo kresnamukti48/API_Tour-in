@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OrderSouvenir;
 use App\Models\OrderTicket;
 
 if (! function_exists('order_finder')) {
@@ -15,6 +16,19 @@ if (! function_exists('order_finder')) {
                 'type' => 'ticket',
                 'model' => OrderTicket::class,
                 'data' => $order_ticket->first(),
+            ];
+        }
+
+        $order_souvenir = OrderSouvenir::query();
+        $order_souvenir = $order_souvenir->whereTrxId($trxid);
+        if (! empty($merchantRef)) {
+            $order_souvenir = $order_souvenir->whereMerchantRef($merchantRef);
+        }
+        if ($order_souvenir->exists()) {
+            return [
+                'type' => 'souvenir',
+                'model' => OrderSouvenir::class,
+                'data' => $order_souvenir->first(),
             ];
         }
 
