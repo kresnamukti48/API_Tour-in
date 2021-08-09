@@ -89,7 +89,7 @@ Route::middleware(['json.response'])->group(function () {
     Route::apiResource('review', 'ReviewController');
 
     Route::prefix('status')->group(function () {
-        Route::get('{trxid}', 'StatusController@index')->name('status');
+        Route::get('{trxid}', 'StatusController@status')->name('status');
         Route::any('{vendor}/{trxid?}', 'StatusController@callback');
     });
 });
