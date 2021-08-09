@@ -33,35 +33,33 @@ class StatusController extends Controller
             $payment_category = $payment_method->category;
             $payment_vendor = $payment_method->vendor;
 
-            if ($order_finder['type'] == 'ticket') {
-                switch ($payment_vendor->id) {
-                    case $this->vendor::VENDOR_XENDIT:
-                        $payment = new Collection();
+            switch ($payment_vendor->id) {
+                case $this->vendor::VENDOR_XENDIT:
+                    $payment = new Collection();
 
-                        $payment_data = Invoice::retrieve($order->merchant_ref);
+                    $payment_data = Invoice::retrieve($order->merchant_ref);
 
-                        $payment->put('account_name', $payment_method->code);
-                        $payment->put('account_type', $payment_category->name);
+                    $payment->put('account_name', $payment_method->code);
+                    $payment->put('account_type', $payment_category->name);
 
-                        switch ($payment_category->id) {
-                            case $this->category::CATEGORY_VA:
-                                $payment->put('account_number', $payment_data['available_banks'][0]['bank_account_number']);
-                                break;
+                    switch ($payment_category->id) {
+                        case $this->category::CATEGORY_VA:
+                            $payment->put('account_number', $payment_data['available_banks'][0]['bank_account_number']);
+                            break;
 
-                            case $this->category::CATEGORY_STORE:
-                                $payment->put('account_number', $payment_data['available_retail_outlets'][0]['payment_code']);
-                                break;
-                        }
+                        case $this->category::CATEGORY_STORE:
+                            $payment->put('account_number', $payment_data['available_retail_outlets'][0]['payment_code']);
+                            break;
+                    }
 
-                        $payment->put('amount', $order->total);
-                        $payment->put('invoice_url', $payment_data['invoice_url']);
+                    $payment->put('amount', $order->total);
+                    $payment->put('invoice_url', $payment_data['invoice_url']);
 
-                        $order->payment = $payment;
-                        break;
-                }
-
-                return responder()->success($order->withoutRelations());
+                    $order->payment = $payment;
+                    break;
             }
+
+            return responder()->success($order->withoutRelations());
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
