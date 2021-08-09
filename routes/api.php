@@ -37,10 +37,10 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('payment-channel/{id}/restore', 'PaymentChannelsController@restore');
                 Route::apiResource('payment-channel', 'PaymentChannelsController')->except(['show'])->parameter('payment-channel', 'paymentChannels');
             });
+        });
 
-            Route::apiResource('user', 'UserController');
-            Route::apiResource('tour-manager', 'TourManagerController');
-            Route::apiResource('seller', 'SellerController');
+        Route::prefix('tourmanager')->middleware(['role:'.Role::ROLE_TOUR_MANAGER])->namespace('TourManager')->group(function () {
+            Route::apiResource('tour', 'TourController');
         });
 
         Route::prefix('user')->group(function () {
