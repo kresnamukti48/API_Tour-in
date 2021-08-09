@@ -41,6 +41,7 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::prefix('tourmanager')->middleware(['role:'.Role::ROLE_TOUR_MANAGER])->namespace('TourManager')->group(function () {
             Route::apiResource('tour', 'TourController');
+            Route::apiResource('virtualtour', 'VirtualTourController');
         });
 
         Route::prefix('user')->group(function () {
