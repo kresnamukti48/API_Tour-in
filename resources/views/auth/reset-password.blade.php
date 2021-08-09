@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel Starter</title>
+    <title>Reset Password</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -64,13 +64,14 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <form class="form-container" action="api/reset" method="POST">
-        <h2>Forgot Password?</h2>
+    <form class="form-container" action="{{ route('password.update') }}" method="POST">
+        @csrf
+        <h2>Reset Password?</h2>
 
-        <input name="email" placeholder="Enter email" value="{{request()->get('email')}}">
-        <input name="password" placeholder="Enter new password">
-        <input name="password_confirmation" placeholder="Confirm new password">
-        <input hidden name="token" placeholder="token" value="{{request()->get('token')}}">
+        <input name="email" placeholder="Enter email" value="{{ request()->get('email') }}">
+        <input type="password" name="password" placeholder="Enter new password">
+        <input type="password" name="password_confirmation" placeholder="Confirm new password">
+        <input hidden name="token" placeholder="token" value="{{ $token }}">
 
         <button type="submit">Submit</button>
     </form>
