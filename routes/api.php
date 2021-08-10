@@ -43,6 +43,7 @@ Route::middleware(['json.response'])->group(function () {
             Route::apiResource('tour', 'TourController');
             Route::apiResource('virtualtour', 'VirtualTourController');
             Route::apiResource('ticket', 'TicketController');
+            Route::apiResource('seller', 'SellerController');
         });
 
         Route::prefix('user')->group(function () {
