@@ -45,7 +45,7 @@ class OrderSouvenirController extends Controller
             'phone' => 'required',
             'email' => 'required|email:rfc,strict,dns',
         ], [
-            'souvenir_id.exists' => 'Ticket tidak valid',
+            'souvenir_id.exists' => 'Souvenir tidak valid',
             'email.email' => 'Email tidak valid',
         ]);
 
