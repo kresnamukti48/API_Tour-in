@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Store extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['store_name', 'store_address', 'regency_id', 'province_id', 'user_id', 'tour_id'];
+    protected $fillable = ['store_name', 'store_address', 'regency_id', 'province_id', 'user_id', 'tour_id', 'status'];
+
+    public const STATUS_PENDING = 0;
+    public const STATUS_APPROVED = 1;
 
     public function user()
     {
