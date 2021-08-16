@@ -53,8 +53,8 @@ Route::middleware(['json.response'])->group(function () {
         });
 
         Route::middleware(['role:'.Role::ROLE_USER])->group(function () {
-            Route::apiResource('order-ticket', 'OrderTicketController');
-            Route::apiResource('order-souvenir', 'OrderSouvenirController');
+            Route::apiResource('order-ticket', 'OrderTicketController')->only(['index', 'store']);
+            Route::apiResource('order-souvenir', 'OrderSouvenirController')->only(['index', 'store']);
         });
     });
 
@@ -75,21 +75,21 @@ Route::middleware(['json.response'])->group(function () {
         Route::get('/social/{social}/callback', 'AuthController@authSocialCallback');
     });
 
-    Route::apiResource('tour', 'TourController');
+    Route::apiResource('tour', 'TourController')->only(['index']);
 
-    Route::apiResource('virtualtour', 'VirtualTourController');
+    Route::apiResource('virtualtour', 'VirtualTourController')->only(['index']);
 
-    Route::apiResource('virtualtourgallery', 'VirtualTourGalleryController');
+    Route::apiResource('virtualtourgallery', 'VirtualTourGalleryController')->only(['index']);
 
-    Route::apiResource('store', 'StoreController');
+    Route::apiResource('store', 'StoreController')->only(['index']);
 
-    Route::apiResource('ticket', 'TicketController');
+    Route::apiResource('ticket', 'TicketController')->only(['index']);
 
-    Route::apiResource('souvenir', 'SouvenirController');
+    Route::apiResource('souvenir', 'SouvenirController')->only(['index']);
 
-    Route::apiResource('souvenirstock', 'SouvenirStockController');
+    Route::apiResource('souvenirstock', 'SouvenirStockController')->only(['index']);
 
-    Route::apiResource('review', 'ReviewController');
+    Route::apiResource('review', 'ReviewController')->only(['store', 'show']);
 
     Route::prefix('status')->group(function () {
         Route::get('{trxid}', 'StatusController@status')->name('status');
