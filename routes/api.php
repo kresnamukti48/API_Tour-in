@@ -70,9 +70,6 @@ Route::middleware(['json.response'])->group(function () {
         Route::post('login', 'AuthController@login');
         Route::post('forgot', 'AuthController@forgot')->middleware('guest')->name('password.email');
 
-        Route::get('/reset/{token}', function ($token) {
-            return view('auth.reset-password', ['token' => $token]);
-        })->middleware('guest')->name('password.reset');
         Route::post('reset', 'AuthController@reset')->middleware(['guest'])->name('password.update');
 
         Route::get('/social/{social}/redirect', 'AuthController@authSocial');

@@ -64,7 +64,7 @@
 </head>
 <body>
 <div class="flex-center position-ref full-height">
-    <form class="form-container" action="{{ route('password.update') }}" method="POST">
+    <form class="form-container" action="{{ route('web.password.update') }}" method="POST">
         @csrf
         <h2>Reset Password?</h2>
 

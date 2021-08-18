@@ -238,8 +238,14 @@ class AuthController extends Controller
             }
         );
 
+        if ($request->wantsJson()) {
+            return $status === Password::PASSWORD_RESET
+                ? responder()->success(['status' => __($status)])
+                : responder()->error(null, __($status));
+        }
+
         return $status === Password::PASSWORD_RESET
-            ? responder()->success(['status' => __($status)])
+            ? back()->withSuccess(['status' => __($status)])
             : back()->withErrors(['email' => [__($status)]]);
     }
 

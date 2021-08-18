@@ -22,4 +22,13 @@ class PaymentChannels extends Model
     {
         return $this->belongsTo(PaymentVendorMethod::class, 'payment_method_vendor_id');
     }
+
+    public function status()
+    {
+        if (! empty($this->method()) && $this->status == self::STATUS_ACTIVE) {
+            return self::STATUS_ACTIVE;
+        }
+
+        return self::STATUS_DISABLED;
+    }
 }
