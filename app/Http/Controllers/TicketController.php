@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CollectionHelper;
+use App\Models\PaymentChannels;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Log;
 
 class TicketController extends Controller
@@ -21,9 +24,29 @@ class TicketController extends Controller
             if (! empty($tour_id)) {
                 $table = $table->where('tour_id', $tour_id);
             }
-            $table = $table->orderBy('id', 'DESC')->paginate(10);
+            $table = $table->orderBy('id', 'DESC')->get();
 
-            return responder()->success($table);
+            $table = $table->map(function ($ticket) {
+                $channels = new Collection();
+                foreach (PaymentChannels::with(['method'])->get() as $payment) {
+                    $channels->push([
+                        'channel_id' => $payment->id,
+                        'channel_name' => $payment->payment_name,
+                        'channel_status' => $payment->status(),
+                        'channel_price' => $payment->method->getMarkupPrice($ticket->ticket_price),
+                    ]);
+                }
+                $ticket['price'] = $channels;
+                unset($ticket->ticket_price);
+
+                return $ticket;
+            });
+
+            $table = CollectionHelper::paginate($table, 10);
+
+            return responder()->success([
+                'data' => $table,
+            ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
 
