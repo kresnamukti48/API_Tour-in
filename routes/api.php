@@ -48,6 +48,10 @@ Route::middleware(['json.response'])->group(function () {
             Route::apiResource('souvenir', 'SouvenirController');
         });
 
+        Route::prefix('seller')->middleware(['role:'.Role::ROLE_SELLER])->namespace('Seller')->group(function () {
+            Route::apiResource('store', 'StoreController');
+        });
+
         Route::prefix('user')->group(function () {
             Route::get('profile', 'UserController@profile');
         });
