@@ -50,6 +50,7 @@ Route::middleware(['json.response'])->group(function () {
 
         Route::prefix('seller')->middleware(['role:'.Role::ROLE_SELLER])->namespace('Seller')->group(function () {
             Route::apiResource('store', 'StoreController');
+            Route::apiResource('souvenir', 'SouvenirController');
         });
 
         Route::prefix('user')->group(function () {
