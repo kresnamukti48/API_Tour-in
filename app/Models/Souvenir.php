@@ -24,4 +24,14 @@ class Souvenir extends Model
     {
         return $this->hasMany(SouvenirStock::class, 'souvenir_id');
     }
+
+    public function souvenir_stock_ready()
+    {
+        $stock = $this->souvenir_stock();
+        $stock_in = $stock->sum('qty_in');
+        $stock_out = $stock->sum('qty_out');
+        $stock_ready = $stock_in - $stock_out;
+
+        return $stock_ready;
+    }
 }

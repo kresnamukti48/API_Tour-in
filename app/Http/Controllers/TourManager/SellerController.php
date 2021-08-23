@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TourManager;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Log;
@@ -73,6 +74,11 @@ class SellerController extends Controller
                 'birthdate' => $request->birthdate,
                 'gender' => $request->gender,
                 'password' => bcrypt($request->password),
+                'status' => User::STATUS_PENDING,
+            ]);
+
+            $user->profile_seller()->create([
+                'manager_id' => Auth::id(),
                 'status' => User::STATUS_PENDING,
             ]);
 
@@ -163,14 +169,17 @@ class SellerController extends Controller
      */
     public function destroy($id)
     {
-        if (User::role([Role::ROLE_SELLER])) {
-            $user = User::findOrFail($id);
-        } else {
-            return responder()->error(null, 'Invalid Role');
-        }
+        $user = User::findOrFail($id);
 
         try {
-            $user->delete();
+            if (empty($user->profile_seller)) {
+                return responder()->error(null, 'Seller tidak ditemukan');
+            }
+            if ($user->profile_seller->manager_id == Auth::id()) {
+                $user->delete();
+            } else {
+                return responder()->error(null, 'Invalid Role');
+            }
 
             return responder()->success([
                 'message' => 'Data berhasil di Hapus',

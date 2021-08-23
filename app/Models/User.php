@@ -53,6 +53,11 @@ class User extends Authenticatable
 
     public function profile_manager()
     {
-        return $this->hasMany(ProfileManager::class, 'user_id');
+        return $this->hasOne(ProfileManager::class, 'user_id');
+    }
+
+    public function profile_seller()
+    {
+        return $this->hasOne(ProfileSeller::class, 'user_id');
     }
 }

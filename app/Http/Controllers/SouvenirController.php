@@ -19,7 +19,7 @@ class SouvenirController extends Controller
     {
         try {
             $data = Souvenir::query();
-            $data = $data->with(['store', 'souvenir_stock'])->get();
+            $data = $data->with(['store'])->get();
 
             $data = $data->map(function ($souvenir) {
                 $channels = new Collection();
@@ -32,6 +32,7 @@ class SouvenirController extends Controller
                     ]);
                 }
                 $souvenir['price'] = $channels;
+                $souvenir['souvenir_stock'] = $souvenir->souvenir_stock_ready();
                 unset($souvenir->souvenir_price);
 
                 return $souvenir;
