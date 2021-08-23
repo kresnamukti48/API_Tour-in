@@ -43,6 +43,11 @@ Route::middleware(['json.response'])->group(function () {
             Route::prefix('tour')->group(function () {
                 Route::post('export', 'TourController@export');
             });
+
+            Route::prefix('virtualtour')->group(function () {
+                Route::post('export', 'VirtualTourController@export');
+            });
+
             Route::apiResource('tour', 'TourController');
 
             Route::apiResource('virtualtour', 'VirtualTourController');
