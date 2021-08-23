@@ -40,7 +40,11 @@ Route::middleware(['json.response'])->group(function () {
         });
 
         Route::prefix('tourmanager')->middleware(['role:'.Role::ROLE_TOUR_MANAGER])->namespace('TourManager')->group(function () {
+            Route::prefix('tour')->group(function () {
+                Route::post('export', 'TourController@export');
+            });
             Route::apiResource('tour', 'TourController');
+
             Route::apiResource('virtualtour', 'VirtualTourController');
             Route::apiResource('ticket', 'TicketController');
             Route::apiResource('seller', 'SellerController');
