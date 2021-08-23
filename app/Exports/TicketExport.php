@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class VirtualTourExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithStrictNullComparison, WithColumnFormatting
+class TicketExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithStrictNullComparison, WithColumnFormatting
 {
     public $collection;
 
@@ -31,14 +31,17 @@ class VirtualTourExport implements FromCollection, WithMapping, WithHeadings, Sh
     }
 
     /**
-     * @var VirtuaTour
+     * @var Ticket
      */
-    public function map($virtualtour): array
+    public function map($ticket): array
     {
         return [
             ++$this->rowNumber,
-            $virtualtour->tour->tour_name,
-            Date::dateTimeToExcel($virtualtour->created_at),
+            $ticket->tour->tour_name,
+            $ticket->ticket_name,
+            $ticket->ticket_price,
+            $ticket->detail,
+            Date::dateTimeToExcel($ticket->created_at),
         ];
     }
 
@@ -46,7 +49,10 @@ class VirtualTourExport implements FromCollection, WithMapping, WithHeadings, Sh
     {
         return [
             '#',
-            'Tour Name',
+            'Nama Wisata',
+            'Nama Ticket',
+            'Harga Ticket',
+            'Detail',
             'Tanggal Registrasi',
         ];
     }
@@ -54,7 +60,7 @@ class VirtualTourExport implements FromCollection, WithMapping, WithHeadings, Sh
     public function columnFormats(): array
     {
         return [
-            'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 }
