@@ -4,12 +4,13 @@ namespace App\Http\Controllers\TourManager;
 
 use App\Exports\TourExport;
 use App\Http\Controllers\Controller;
-use App\Imports\TourImport;
+use App\Mail\Export\TourExportMail;
 use App\Models\Tour;
 use Auth;
 use Illuminate\Http\Request;
 use Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Mail;
 
 class TourController extends Controller
 {
@@ -142,35 +143,16 @@ class TourController extends Controller
         }
     }
 
-    public function export_excel()
+    public function export(Request $request)
     {
         try {
-            return Excel::download(new TourExport, 'tour.xlsx');
+            $tour = Tour::all();
+            $data = Excel::raw(new TourExport($tour), \Maatwebsite\Excel\Excel::XLSX);
+
+            Mail::to(Auth::user())->send(new TourExportMail($data));
 
             return responder()->success([
-                'message' => 'Data berhasil di Download',
-            ]);
-        } catch (\Throwable $th) {
-            Log::emergency($th->getMessage());
-
-            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
-        }
-    }
-
-    public function import_excel(Request $request)
-    {
-        $this->validate($request, [
-            'file' => 'required|mimes:csv,xls,xlsx',
-        ]);
-
-        try {
-            $file = $request->file('file');
-            $nama_file = rand().$file->getClientOriginalName();
-            $file->move('file_siswa', $nama_file);
-            Excel::import(new TourImport, public_path('/file_siswa/'.$nama_file));
-
-            return responder()->success([
-                'message' => 'Data tour berhasil di Import!',
+                'message' => 'Hasil export data tour akan dikirimkan melalui email anda.',
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
