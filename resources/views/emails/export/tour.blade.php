@@ -1,5 +1,5 @@
 @component('mail::message')
-# Export Data Seller
+# Export Data Tour
 
 Export data tour telah berhasil.
 

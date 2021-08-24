@@ -133,13 +133,13 @@ class VirtualTourController extends Controller
     public function export(Request $request)
     {
         try {
-            $tour = Virtualtour::all();
-            $data = Excel::raw(new VirtualTourExport($tour), \Maatwebsite\Excel\Excel::XLSX);
+            $virtualtour = Virtualtour::all();
+            $data = Excel::raw(new VirtualTourExport($virtualtour), \Maatwebsite\Excel\Excel::XLSX);
 
             Mail::to(Auth::user())->send(new VirtualTourExportMail($data));
 
             return responder()->success([
-                'message' => 'Hasil export data tour akan dikirimkan melalui email anda.',
+                'message' => 'Hasil export data virtualtour akan dikirimkan melalui email anda.',
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

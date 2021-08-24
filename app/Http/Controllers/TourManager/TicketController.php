@@ -150,13 +150,13 @@ class TicketController extends Controller
     public function export(Request $request)
     {
         try {
-            $tour = Ticket::all();
-            $data = Excel::raw(new TicketExport($tour), \Maatwebsite\Excel\Excel::XLSX);
+            $ticket = Ticket::all();
+            $data = Excel::raw(new TicketExport($ticket), \Maatwebsite\Excel\Excel::XLSX);
 
             Mail::to(Auth::user())->send(new TicketExportMail($data));
 
             return responder()->success([
-                'message' => 'Hasil export data tour akan dikirimkan melalui email anda.',
+                'message' => 'Hasil export data ticket akan dikirimkan melalui email anda.',
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());

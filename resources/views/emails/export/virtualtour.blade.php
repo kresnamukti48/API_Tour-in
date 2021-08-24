@@ -1,9 +1,9 @@
 @component('mail::message')
-# Export Data Seller
+# Export Data Virtual Tour
 
-Export data tour telah berhasil.
+Export data virtualtour telah berhasil.
 
-Silahkan unduh hasil export data tour yang telah disematkan dalam <i>attachment</i>.
+Silahkan unduh hasil export data virtualtour yang telah disematkan dalam <i>attachment</i>.
 
 Thanks,<br>
 {{ config('app.name') }}
