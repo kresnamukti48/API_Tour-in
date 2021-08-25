@@ -198,7 +198,7 @@ class SellerController extends Controller
     public function export(Request $request)
     {
         try {
-            $seller = User::where($request, Role::ROLE_SELLER);
+            $seller = User::all()->where($request, Role::ROLE_SELLER);
             $data = Excel::raw(new SellerExport($seller), \Maatwebsite\Excel\Excel::XLSX);
 
             Mail::to(Auth::user())->send(new SellerExportMail($data));
