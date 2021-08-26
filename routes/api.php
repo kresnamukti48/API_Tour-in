@@ -74,6 +74,10 @@ Route::middleware(['json.response'])->group(function () {
         });
 
         Route::prefix('seller')->middleware(['role:'.Role::ROLE_SELLER])->namespace('Seller')->group(function () {
+            Route::prefix('souvenir')->group(function () {
+                Route::post('export', 'SouvenirController@export');
+            });
+
             Route::apiResource('store', 'StoreController');
             Route::apiResource('souvenir', 'SouvenirController');
             Route::apiResource('souvenirstock', 'SouvenirStockController');

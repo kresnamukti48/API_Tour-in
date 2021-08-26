@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Exports\SouvenirExport;
 use App\Http\Controllers\Controller;
+use App\Mail\Export\SouvenirExportMail;
 use App\Models\Souvenir;
 use Auth;
 use Illuminate\Http\Request;
 use Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Mail;
 
 class SouvenirController extends Controller
 {
@@ -126,6 +130,24 @@ class SouvenirController extends Controller
 
             return responder()->success([
                 'message' => 'Data berhasil di Hapus',
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
+    }
+
+    public function export(Request $request)
+    {
+        try {
+            $souvenir = Souvenir::all();
+            $data = Excel::raw(new SouvenirExport($souvenir), \Maatwebsite\Excel\Excel::XLSX);
+
+            Mail::to(Auth::user())->send(new SouvenirExportMail($data));
+
+            return responder()->success([
+                'message' => 'Hasil export data souvenir akan dikirimkan melalui email anda.',
             ]);
         } catch (\Throwable $th) {
             Log::emergency($th->getMessage());
