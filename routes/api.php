@@ -78,6 +78,10 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('export', 'SouvenirController@export');
             });
 
+            Route::prefix('store')->group(function () {
+                Route::post('export', 'StoreController@export');
+            });
+
             Route::apiResource('store', 'StoreController');
             Route::apiResource('souvenir', 'SouvenirController');
             Route::apiResource('souvenirstock', 'SouvenirStockController');
