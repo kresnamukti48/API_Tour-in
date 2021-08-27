@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Exports\SouvenirStockExport;
 use App\Http\Controllers\Controller;
+use App\Imports\SouvenirStockImport;
+use App\Mail\Export\SouvenirStockExportMail;
 use App\Models\SouvenirStock;
 use Auth;
 use Illuminate\Http\Request;
 use Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Mail;
 
 class SouvenirStockController extends Controller
 {
@@ -133,5 +138,32 @@ class SouvenirStockController extends Controller
 
             return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
         }
+    }
+
+    public function export(Request $request)
+    {
+        try {
+            $souvenirstock = SouvenirStock::all();
+            $data = Excel::raw(new SouvenirStockExport($souvenirstock), \Maatwebsite\Excel\Excel::XLSX);
+
+            Mail::to(Auth::user())->send(new SouvenirStockExportMail($data));
+
+            return responder()->success([
+                'message' => 'Hasil export data souvenirstock akan dikirimkan melalui email anda.',
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
+
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
+    }
+
+    public function Import(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx',
+        ]);
+
+        Excel::import(new SouvenirStockImport, $request->file('file')->store('temp'));
     }
 }

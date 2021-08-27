@@ -82,6 +82,14 @@ Route::middleware(['json.response'])->group(function () {
                 Route::post('export', 'StoreController@export');
             });
 
+            Route::prefix('souvenirstock')->group(function () {
+                Route::post('export', 'SouvenirStockController@export');
+            });
+
+            Route::prefix('souvenirstock')->group(function () {
+                Route::post('import', 'SouvenirStockController@import');
+            });
+
             Route::apiResource('store', 'StoreController');
             Route::apiResource('souvenir', 'SouvenirController');
             Route::apiResource('souvenirstock', 'SouvenirStockController');
