@@ -164,6 +164,12 @@ class SouvenirStockController extends Controller
             'file' => 'required|mimes:csv,xls,xlsx',
         ]);
 
-        Excel::import(new SouvenirStockImport, $request->file('file')->store('temp'));
+        $file = $request->file('file');
+
+        $nama_file = rand().$file->getClientOriginalName();
+
+        $file->move('file_stock', $nama_file);
+
+        Excel::import(new SouvenirStockImport, public_path('/file_stock/'.$nama_file));
     }
 }
