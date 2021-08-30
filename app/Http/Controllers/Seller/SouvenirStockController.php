@@ -164,12 +164,19 @@ class SouvenirStockController extends Controller
             'file' => 'required|mimes:csv,xls,xlsx',
         ]);
 
-        $file = $request->file('file');
+        try {
+            $file = $request->file('file');
+            $nama_file = rand().$file->getClientOriginalName();
+            $file->move('file_stock', $nama_file);
+            Excel::import(new SouvenirStockImport, public_path('/file_stock/'.$nama_file));
 
-        $nama_file = rand().$file->getClientOriginalName();
+            return responder()->success([
+                'message' => 'Data berhasil di Import!',
+            ]);
+        } catch (\Throwable $th) {
+            Log::emergency($th->getMessage());
 
-        $file->move('file_stock', $nama_file);
-
-        Excel::import(new SouvenirStockImport, public_path('/file_stock/'.$nama_file));
+            return responder()->error(null, 'Terjadi kesalahan pada sistem. Silahkan ulangi beberapa saat lagi');
+        }
     }
 }
